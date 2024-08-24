@@ -24,10 +24,15 @@ function App() {
       <table>
         <thead>
           <tr>
-          {
+            {
               headers.map((column, index) => (
                 <th>
-                  <div key={column} data-column-attr={column} ref={(el) => (refs.current[index] = el)} className="resizer">
+                  <div
+                    key={column}
+                    data-column-attr={column}
+                    ref={(el) => (refs.current[index] = el)}
+                    className="resizer"
+                  >
                     Name
                   </div>
                 </th>
@@ -45,16 +50,6 @@ function App() {
               </tr>
             ))
           }
-          <tr>
-            <td>John Doe</td>
-            <td>25</td>
-            <td>USA</td>
-          </tr>
-          <tr>
-            <td>Jane Smith</td>
-            <td>30</td>
-            <td>UK</td>
-          </tr>
         </tbody>
       </table>
     </div>
