@@ -58,14 +58,14 @@ th, td {
   padding: 8px;
   text-align: left;
   border: 1px solid #ddd;
-  min-width: 100px; /* minimum width to prevent collapsing */
+  min-width: 150px;
   padding: 0;
   margin: 0;
 }
 
 .resizer {
   inset: 0;
-  /* display: inline-block; */
+  min-width: 150px;
   background-color: #ddd;
   resize: horizontal;
   overflow: hidden;
