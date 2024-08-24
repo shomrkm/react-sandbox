@@ -11,9 +11,9 @@ export const useColumnsObserver = ({ dataKey }: Props) => {
     const observer = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         const resizedElement = entry.target;
-        const index = refs.current.indexOf(resizedElement as HTMLDivElement);
+        const foundRef = refs.current.find((ref) => ref === resizedElement);
 
-        if (index !== -1) {
+        if (foundRef) {
           const key = entry.target.getAttribute(dataKey);
           console.log(`${key} was resized to ${entry.contentRect.width}`);
         }

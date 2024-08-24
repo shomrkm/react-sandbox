@@ -31,9 +31,9 @@ function App() {
                     key={column}
                     data-column-attr={column}
                     ref={(el) => (refs.current[index] = el)}
-                    className="resizer"
+                    className="header-cell"
                   >
-                    Name
+                    {column}
                   </div>
                 </th>
               ))
