@@ -1,38 +1,20 @@
-import { useEffect, useRef } from 'react'
 import './App.css'
+import { useColumnsObserver } from './useColumnsObserver';
 
-type ObserverProps = {
-  dataKey: string;
-}
+const headers = ['Name', 'Age', 'Country'];
 
-const useColumnsObserver = ({ dataKey }: ObserverProps) => {
-  const refs = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    const observer = new ResizeObserver((entries) => {
-      entries.forEach((entry) =>{
-          const resizedElement = entry.target;
-          const index = refs.current.indexOf(resizedElement as HTMLDivElement);
-
-          if (index !== -1) {
-            const key = entry.target.getAttribute(dataKey);
-            console.log(`${key} was resized to ${entry.contentRect.width}`)
-          }
-        });
-    });
-
-    const currentRefs = refs.current;
-
-    currentRefs.forEach((ref) => {
-      if (!ref) return;
-      observer.observe(ref);
-    });
-
-    return () => observer.disconnect();
-  }, [dataKey])
-
-  return refs;
-}
+const data = [
+  {
+    name: 'John Doe',
+    age: 25,
+    country: 'USA'
+  },
+  {
+    name: 'Jane Smith',
+    age: 30,
+    country: 'UK'
+  }
+];
 
 function App() {
   const refs = useColumnsObserver({dataKey: 'data-column-attr'});
@@ -43,7 +25,7 @@ function App() {
         <thead>
           <tr>
           {
-              ['column1','column2','column3'].map((column, index) => (
+              headers.map((column, index) => (
                 <th>
                   <div key={column} data-column-attr={column} ref={(el) => (refs.current[index] = el)} className="resizer">
                     Name
@@ -54,6 +36,15 @@ function App() {
           </tr>
         </thead>
         <tbody>
+          {
+            data.map((row, index) => (
+              <tr key={`${row.name}_${index}`}>
+                <td>{row.name}</td>
+                <td>{row.age}</td>
+                <td>{row.country}</td>
+              </tr>
+            ))
+          }
           <tr>
             <td>John Doe</td>
             <td>25</td>
