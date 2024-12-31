@@ -1,59 +1,56 @@
+import { useState } from 'react'
 import './App.css'
-import { useColumnsObserver } from './useColumnsObserver';
-
-const headers = ['Name', 'Age', 'Country'];
-
-const data = [
-  {
-    name: 'John Doe',
-    age: 25,
-    country: 'USA'
-  },
-  {
-    name: 'Jane Smith',
-    age: 30,
-    country: 'UK'
-  }
-];
 
 function App() {
-  const refs = useColumnsObserver({dataKey: 'data-column-attr'});
+  const [count, setCount] = useState(0)
+  return (
+    <>
+      <h1>React Sandbox</h1>
+      <h2>Counter</h2>
+      <Counter count={count} onClick={() => setCount(prev => prev + 1)} />
+      <h2>Child</h2>
+      <Child name="John Doe" />
+    </>
+  )
+}
+
+type CounterProps = {
+  count: number
+  onClick: () => void
+}
+
+const useCounter = (initialValue: number) => {
+  const [count, setCount] = useState(initialValue)
+
+  const addCount = () => setCount(prev => prev + 1)
+  const resetCount = () => setCount(0)
+
+  return { count, addCount, resetCount }
+}
+
+const Counter = ({ count, onClick }: CounterProps) => {
+  const { count: innerCount, addCount } = useCounter(0)
 
   return (
-    <div className="resizable-table">
-      <table>
-        <thead>
-          <tr>
-            {
-              headers.map((column, index) => (
-                <th>
-                  <div
-                    key={column}
-                    data-column-attr={column}
-                    ref={(el) => (refs.current[index] = el)}
-                    className="header-cell"
-                  >
-                    {column}
-                  </div>
-                </th>
-              ))
-            }
-          </tr>
-        </thead>
-        <tbody>
-          {
-            data.map((row, index) => (
-              <tr key={`${row.name}_${index}`}>
-                <td>{row.name}</td>
-                <td>{row.age}</td>
-                <td>{row.country}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
+    <div>
+      <div className="counter">
+        <button onClick={onClick}>Increment++</button>
+        <div>{count}</div>
+      </div>
+      <div className="counter">
+        <button onClick={addCount}>Increment Inner++</button>
+        <div>{innerCount}</div>
+      </div>
     </div>
   )
+}
+
+type ChildProps = {
+  name: string;
+}
+
+const Child = ({ name }: ChildProps) => {
+  return <div>{name}</div>
 }
 
 export default App
