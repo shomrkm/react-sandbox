@@ -1,19 +1,15 @@
-import { useEffect, useState } from 'react'
-import { getAllUsers } from './api/getUsers'
 import './App.css'
-import { User } from './types/user';
+import { useUsers } from './api/getUsers';
 
 function App() {
-  const [users, setUsers] = useState<User[]>([]);
+  const { data }= useUsers();
 
-  useEffect(() => {
-    getAllUsers().then(data => setUsers(data));
-  }, []);
+  if (!data) return <div>Loading...</div>
 
   return (
     <>
       <h1 className='my-4'>Users</h1>
-      {users.map((user) => (
+      {data.map((user) => (
         <div key={user.name}>
           { `${user.name} : ${user.age} `}
         </div>
