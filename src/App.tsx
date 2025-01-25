@@ -1,15 +1,15 @@
 import './App.css'
-import { useUsers } from './api/getAllUsers';
+import { useUsers } from './api/useUsers';
 
 function App() {
-  const { data }= useUsers();
+  const { data, isLoading }= useUsers();
 
-  if (!data) return <div>Loading...</div>
+  if (isLoading) return <div>Loading...</div>
 
   return (
     <>
       <h1 className='my-4'>Users</h1>
-      {data.map((user) => (
+      {data?.map((user) => (
         <div key={user.name}>
           { `${user.name} : ${user.age} `}
         </div>
