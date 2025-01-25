@@ -1,5 +1,5 @@
 import './App.css'
-import { useUsers } from './api/getUsers';
+import { useUsers } from './api/getAllUsers';
 
 function App() {
   const { data }= useUsers();
