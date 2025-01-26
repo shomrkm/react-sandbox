@@ -1,11 +1,12 @@
 import './App.css'
 import { useAllUsers } from './api/useAllUsers';
 import { Button } from './components/Button';
+import { Spinner } from './components/Spinner';
 
 function App() {
   const { data, isLoading }= useAllUsers();
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) return <Spinner />
 
   return (
     <div className="gap-2">
