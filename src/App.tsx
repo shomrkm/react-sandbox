@@ -1,8 +1,8 @@
 import './App.css'
-import { useUsers } from './api/useUsers';
+import { useAllUsers } from './api/useAllUsers';
 
 function App() {
-  const { data, isLoading }= useUsers();
+  const { data, isLoading }= useAllUsers();
 
   if (isLoading) return <div>Loading...</div>
 

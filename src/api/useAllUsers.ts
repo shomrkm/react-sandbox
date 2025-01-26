@@ -10,6 +10,6 @@ const fetcher = async (url: string): Promise<User[]> => {
   return data;
 }
 
-export const useUsers = () => {
+export const useAllUsers = () => {
   return useSWR<User[]>('/users', fetcher);
 }
