@@ -10,17 +10,39 @@ app.use(express.json());
 
 app.use(express.json());
 
-app.get('/users', async (req, res) => {
-  const users = await prisma.user.findMany();
-  res.json(users);
+app.get('/products', async (_, res) => {
+  const products = await prisma.product.findMany();
+  res.json(products);
 })
 
-app.post('/users', async (req, res) => {
-  const { name, age } = req.body;
-  const user = await prisma.user.create({
-    data: { name, age },
+app.get('/products/:id', async (req, res) => {
+  const { id } = req.params;
+  const product = await prisma.product.findUnique({
+    where: { id: Number(id) },
   })
-  res.json(user);
+  res.json(product);
+})
+
+app.patch('/products/:id/cart', async (req, res) => {
+  const { id } = req.params;
+  const { cart } = req.body;
+
+  const existingProduct = await prisma.product.findUnique({
+    where: { id: Number(id) },
+  });
+
+  if (!existingProduct) {
+    return res.status(404).json({ error: 'Product not found' });
+  }
+
+  const updatedCart = existingProduct.cart + cart;
+
+  const product = await prisma.product.update({
+    where: { id: Number(id) },
+    data: { cart: updatedCart },
+  });
+
+  return res.json(product);
 })
 
 const PORT = process.env.PORT || 3000
