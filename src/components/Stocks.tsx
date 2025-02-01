@@ -1,3 +1,4 @@
+import { RiArrowGoBackFill } from 'react-icons/ri';
 import { useProduct } from '../api/useProduct';
 import { Button } from './Button'
 import { MdOutlineRefresh } from "react-icons/md";
@@ -9,7 +10,7 @@ type Props = {
 }
 
 export const Stocks: React.FC<Props> = ( { productId }) => {
-  const { data, mutate, isLoading } = useProduct({ id: productId });
+  const { data, mutate: revalidate, isLoading } = useProduct({ id: productId });
 
   const handleUpdateStock = async (stocks: number) => {
     const res = await fetch(`${BASE_URL}/products/${productId}/stock`, {
@@ -22,21 +23,31 @@ export const Stocks: React.FC<Props> = ( { productId }) => {
     const json = await res.json()
 
     if(!json.ok){
-      console.log(json.error)
       return;
     }
 
-    mutate()
+    revalidate()
   }
 
+  const handleClearCart = async () => {
+    const res = await fetch(`${BASE_URL}/products/${productId}/clear-cart`, { method: 'PATCH'});
+    const json = await res.json()
+
+    if(!json.ok){
+      return;
+    }
+
+    revalidate()
+  };
+
   const handleRefresh = async () => {
-    mutate();
+    revalidate();
   };
 
   if(!data) return <div>No data</div>
 
   return (
-    <div className="flex justify-around my-4 gap-4 bg-gray-200 rounded-md px-4 py-2 text-gray-600">
+    <div className="flex justify-around items-center my-4 gap-4 bg-gray-200 rounded-md px-4 py-2 text-gray-600">
       <div className="flex-col justify-center items-center text-gray-600">
         <div className='flex justify-center items-center gap-4'>
           <Button onClick={() => handleUpdateStock(data.stocks - 1)} className='bg-gray-100 text-md'>-</Button>
@@ -47,11 +58,10 @@ export const Stocks: React.FC<Props> = ( { productId }) => {
       </div>
       <div className="flex-col justify-center items-center text-gray-600">
         <div className='flex justify-center items-center gap-4'>
-          <Button className='bg-gray-100 text-md'>-</Button>
+          <Button onClick={handleClearCart} className='bg-gray-100 text-md'><RiArrowGoBackFill /></Button>
           <div className='text-2xl'>{data?.cart}</div>
-          <Button className='bg-gray-100 text-md'>+</Button>
         </div>
-        <div>Cart</div>
+        <div className='text-right'>Cart</div>
       </div>
       <div className="flex-col justify-center items-center text-gray-600 w-40">
       </div>

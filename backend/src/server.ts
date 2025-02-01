@@ -78,6 +78,32 @@ app.patch('/products/:id/stock', async (req, res) => {
   }
 })
 
+app.patch('/products/:id/clear-cart', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const existingProduct = await prisma.product.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!existingProduct) {
+      return res.status(404).json({ ok: false, error: 'Product not found' });
+    }
+
+    await prisma.product.update({
+      where: { id: Number(id) },
+      data: { cart: 0 },
+    });
+
+    return res.json({ ok: true });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ ok: false, error: 'An error occurred while updating the stocks' });
+  }
+})
+
+
+
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
