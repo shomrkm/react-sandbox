@@ -5,6 +5,8 @@ import cors from 'cors';
 const app = express()
 const prisma = new PrismaClient()
 
+app.use(express.json());
+
 app.use(cors());
 
 app.get('/products', async (_, res) => {
@@ -47,6 +49,32 @@ app.patch('/products/:id/add-to-cart', async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ ok: false, error: 'An error occurred while adding the product to the cart' });
+  }
+})
+
+app.patch('/products/:id/stock', async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(req.body)
+    const { stocks } = req.body;
+
+    const existingProduct = await prisma.product.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!existingProduct) {
+      return res.status(404).json({ ok: false, error: 'Product not found' });
+    }
+
+    await prisma.product.update({
+      where: { id: Number(id) },
+      data: { stocks },
+    });
+
+    return res.json({ ok: true });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ ok: false, error: 'An error occurred while updating the stocks' });
   }
 })
 
