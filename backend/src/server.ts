@@ -6,9 +6,6 @@ const app = express()
 const prisma = new PrismaClient()
 
 app.use(cors());
-app.use(express.json());
-
-app.use(express.json());
 
 app.get('/products', async (_, res) => {
   const products = await prisma.product.findMany();
@@ -23,26 +20,30 @@ app.get('/products/:id', async (req, res) => {
   res.json(product);
 })
 
-app.patch('/products/:id/cart', async (req, res) => {
-  const { id } = req.params;
-  const { cart } = req.body;
+app.patch('/products/:id/add-to-cart', async (req, res) => {
+  try {
+    const { id } = req.params;
 
-  const existingProduct = await prisma.product.findUnique({
-    where: { id: Number(id) },
-  });
+    const existingProduct = await prisma.product.findUnique({
+      where: { id: Number(id) },
+    });
 
-  if (!existingProduct) {
-    return res.status(404).json({ error: 'Product not found' });
+    if (!existingProduct) {
+      return res.status(404).json({ ok: false, error: 'Product not found' });
+    }
+
+    const updatedCart = existingProduct.cart + 1;
+
+    await prisma.product.update({
+      where: { id: Number(id) },
+      data: { cart: updatedCart },
+    });
+
+    return res.json({ ok: true });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ ok: false, error: 'An error occurred while adding the product to the cart' });
   }
-
-  const updatedCart = existingProduct.cart + cart;
-
-  const product = await prisma.product.update({
-    where: { id: Number(id) },
-    data: { cart: updatedCart },
-  });
-
-  return res.json(product);
 })
 
 const PORT = process.env.PORT || 3000
