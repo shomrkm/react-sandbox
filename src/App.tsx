@@ -27,21 +27,22 @@ function App() {
   if(!data) return <div>No data</div>
 
   return (
-    <>
-      <div className='flex gap-4 justify-around items-start h-40 mb-10'>
-        <div className='flex-col justify-start items-start'>
-          <img src='https://placehold.jp/150x150' alt='product' />
-          <div className='text-gray-500 text-xl mt-2'>{data.name}</div>
+    <div className='container mx-auto p-10'>
+      <div className='flex gap-4 justify-between items-start mb-10'>
+        <div className='flex-col justify-start items-start border border-gray-200 p-4 rounded-md w-1/2'>
+          <img src={`${BASE_URL}/images/1.png`} alt={data.name} style={{ width: '', objectFit: 'cover' }} />
+          <div className='text-gray-500 text-3xl mt-2'>{data.name}</div>
         </div>
-        <div className='flex-col justify-start'>
-          <Button onClick={handleAddToCart} className='bg-yellow-300'>
+        <div className='flex-col justify-center items-center w-1/2'>
+          <Button onClick={handleAddToCart} className='w-full bg-yellow-300 mb-5'>
             Add to Cart
           </Button>
-          <div className='text-red-500 mt-2'>{error}</div>
+          <div>Your cart: {data.cart}</div>
+          { error && <div className='text-red-500 mt-2'>{error}</div> }
         </div>
       </div>
       <Stocks productId={PRODUCT_ID} />
-    </>
+    </div>
   );
 }
 

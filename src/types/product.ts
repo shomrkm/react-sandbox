@@ -4,4 +4,5 @@ export type Product= {
   name: string;
   cart: number;
   stocks: number;
+  imagePath?: string;
 }

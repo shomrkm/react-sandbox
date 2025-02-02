@@ -1,6 +1,7 @@
 import express from 'express'
 import { PrismaClient } from '@prisma/client'
 import cors from 'cors';
+import path from 'path';
 
 const app = express()
 const prisma = new PrismaClient()
@@ -8,6 +9,8 @@ const prisma = new PrismaClient()
 app.use(express.json());
 
 app.use(cors());
+
+app.use('/images', express.static(path.join(__dirname, '../images')));
 
 app.get('/products', async (_, res) => {
   const products = await prisma.product.findMany();
