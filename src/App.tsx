@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useTransition } from 'react';
 import './App.css'
 import { useProduct } from './api/useProduct';
 import { Button, Spinner, Stocks } from './components';
@@ -9,25 +9,24 @@ const PRODUCT_ID = '1';
 
 function App() {
   const { data, mutate: revalidate }= useProduct({ id: PRODUCT_ID });
-  const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState(null);
 
+  const [isPending, startTransition] = useTransition();
+
   const handleAddToCart = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    startTransition(async () => {
+      e.preventDefault();
 
-    setIsPending(true)
+      const res = await fetch(`${BASE_URL}/products/${PRODUCT_ID}/add-to-cart`, { method: 'PATCH'});
+      const json = await res.json()
 
-    const res = await fetch(`${BASE_URL}/products/${PRODUCT_ID}/add-to-cart`, { method: 'PATCH'});
-    const json = await res.json()
-
-    if(json.ok){
-      revalidate()
-      setError(null)
-    } else {
-      setError(json.error)
-    }
-
-    setIsPending(false)
+      if(json.ok){
+        revalidate()
+        setError(null)
+      } else {
+        setError(json.error)
+      }
+    })
   };
 
   if(!data) {
