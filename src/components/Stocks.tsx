@@ -47,21 +47,21 @@ export const Stocks: React.FC<Props> = ( { productId }) => {
   if(!data) return <div>No data</div>
 
   return (
-    <div className="flex justify-around items-center my-4 gap-4 bg-gray-200 rounded-md px-4 py-2 text-gray-600">
-      <div className="flex-col justify-center items-center text-gray-600">
-        <div className='flex justify-center items-center gap-4'>
-          <Button onClick={() => handleUpdateStock(data.stocks - 1)} className='bg-gray-100 text-md'>-</Button>
+    <div className="flex justify-center items-center my-4 gap-4 bg-gray-200 rounded-md px-4 py-2 text-gray-600 h-20">
+      <div className="w-30 flex-col justify-center items-center text-gray-600">
+        <div className='flex justify-center items-center gap-4 h-10'>
+          <Button onClick={() => handleUpdateStock(data.stocks - 1)} className='h-10 bg-gray-100 text-md'>-</Button>
           <div className='text-2xl'>{data?.stocks}</div>
-          <Button onClick={() => handleUpdateStock(data.stocks + 1)} className='bg-gray-100 text-md'>+</Button>
+          <Button onClick={() => handleUpdateStock(data.stocks + 1)} className='h-10 bg-gray-100 text-md'>+</Button>
         </div>
         <div>Stock</div>
       </div>
-      <div className="flex-col justify-center items-center text-gray-600">
-        <div className='flex justify-center items-center gap-4'>
-          <Button onClick={handleClearCart} className='bg-gray-100 text-md'><RiArrowGoBackFill /></Button>
-          <div className='text-2xl'>{data?.cart}</div>
+      <div className="w-30 flex-col justify-center items-center text-gray-600">
+        <div className='flex justify-center items-center gap-4 h-10'>
+          <Button onClick={handleClearCart} className='bg-gray-100 text-md h-10'><RiArrowGoBackFill className='w-4 h-4' /></Button>
+          <div className='text-2xl w-4'>{data.cart}</div>
         </div>
-        <div className='text-right'>Cart</div>
+        <div className='pl-16'>Cart</div>
       </div>
       <div className="flex-col justify-center items-center text-gray-600 w-40">
       </div>
