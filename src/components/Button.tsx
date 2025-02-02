@@ -1,9 +1,13 @@
-import { ComponentProps } from "react"
+import { ComponentPropsWithoutRef } from "react"
 
-type Props = { className?: string } & ComponentProps<"button">
+type Props = {
+  prefixIcon?: React.ReactNode
+  className?: string
+} & ComponentPropsWithoutRef<"button">
 
-export const Button: React.FC<Props> = (props) => {
-  return <button {...props} className={`rounded-lg border border-transparent px-3 py-2 text-base font-medium bg-gray-900 cursor-pointer transition-colors duration-200 hover:border-blue-500 focus:outline-none focus-visible:ring-4 focus-visible:ring-webkit-focus-ring-color ${props.className}`}>
+export const Button: React.FC<Props> = ({ className, prefixIcon, ...props}) => {
+  return <button {...props} className={`${className} bg-gray-200 text-gray-600 rounded-lg border border-transparent px-3 py-2 text-base font-medium cursor-pointer transition-colors duration-200 hover:border-blue-500 focus:outline-none focus-visible:ring-4 focus-visible:ring-webkit-focus-ring-color flex items-center justify-center`}>
+    {prefixIcon && <div className="mr-2">{prefixIcon}</div>}
     {props.children}
   </button>
-}
+};

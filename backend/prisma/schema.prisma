@@ -13,8 +13,9 @@ datasource db {
   url      = "postgresql://shomrkm:shomrkm@localhost:5432/mydb"
 }
 
-model User {
+model Product {
   id   Int    @id @default(autoincrement())
   name String
-  age  Int
+  cart Int
+  stocks Int
 }
