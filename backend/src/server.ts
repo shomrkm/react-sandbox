@@ -40,7 +40,7 @@ app.patch('/products/:id/add-to-cart', async (req, res) => {
     const updatedCart = existingProduct.cart + 1;
 
     if(existingProduct.stocks < updatedCart){
-      return res.status(400).json({ ok: false, error: 'Stocks are not enough' });
+      return res.status(400).json({ ok: false, error: 'Out of stock!' });
     }
 
     await prisma.product.update({
