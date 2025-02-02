@@ -55,7 +55,6 @@ app.patch('/products/:id/add-to-cart', async (req, res) => {
 app.patch('/products/:id/stock', async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(req.body)
     const { stocks } = req.body;
 
     const existingProduct = await prisma.product.findUnique({
