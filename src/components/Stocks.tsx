@@ -13,6 +13,8 @@ export const Stocks: React.FC<Props> = ( { productId }) => {
   const { data, mutate: revalidate, isLoading } = useProduct({ id: productId });
 
   const handleUpdateStock = async (stocks: number) => {
+    if(stocks < 0) return;
+
     const res = await fetch(`${BASE_URL}/products/${productId}/stock`, {
       method: 'PATCH',
       headers: {
@@ -51,7 +53,7 @@ export const Stocks: React.FC<Props> = ( { productId }) => {
       <div className="w-30 flex-col justify-center items-center text-gray-600">
         <div className='flex justify-center items-center gap-4 h-10'>
           <Button onClick={() => handleUpdateStock(data.stocks - 1)} className='h-10 bg-gray-100 text-md'>-</Button>
-          <div className='text-2xl'>{data?.stocks}</div>
+          <div className='text-2xl'>{data.stocks}</div>
           <Button onClick={() => handleUpdateStock(data.stocks + 1)} className='h-10 bg-gray-100 text-md'>+</Button>
         </div>
         <div>Stock</div>
