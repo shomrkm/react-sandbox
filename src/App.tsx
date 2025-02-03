@@ -1,4 +1,6 @@
-import { FormEvent, useState, useTransition } from 'react';
+import { FC, useActionState} from 'react';
+import { useFormStatus } from 'react-dom';
+
 import './App.css'
 import { useProduct } from './api/useProduct';
 import { Button, Spinner, Stocks } from './components';
@@ -9,25 +11,17 @@ const PRODUCT_ID = '1';
 
 function App() {
   const { data, mutate: revalidate }= useProduct({ id: PRODUCT_ID });
-  const [error, setError] = useState(null);
 
-  const [isPending, startTransition] = useTransition();
+  const [error, addToCartAction] = useActionState(async () => {
+    const res = await fetch(`${BASE_URL}/products/${PRODUCT_ID}/add-to-cart`, { method: 'PATCH'});
+    const json = await res.json()
 
-  const handleAddToCart = async (e: FormEvent<HTMLFormElement>) => {
-    startTransition(async () => {
-      e.preventDefault();
-
-      const res = await fetch(`${BASE_URL}/products/${PRODUCT_ID}/add-to-cart`, { method: 'PATCH'});
-      const json = await res.json()
-
-      if(json.ok){
-        revalidate()
-        setError(null)
-      } else {
-        setError(json.error)
-      }
-    })
-  };
+    if(json.ok){
+      revalidate();
+    } else {
+      return json.error;
+    }
+  }, null);
 
   if(!data) {
     return <Spinner size='xl' />
@@ -37,18 +31,32 @@ function App() {
     <div className='container mx-auto p-10'>
       <div className='flex gap-12 justify-between items-start mb-10'>
         <ProductDetail productId={PRODUCT_ID} />
-        <form onSubmit={handleAddToCart} className='flex-col justify-center items-center w-1/2'>
+
+        <form
+          action={addToCartAction}
+          className='flex-col justify-center items-center w-1/2'>
           <Button type='submit' className='w-full bg-yellow-300 mb-5 font-bold'>
             Add to Cart
           </Button>
+
           <div className='text-xl'>Your cart: {data.cart}</div>
-          { isPending && <Spinner className='mx-auto my-6' /> }
-          { !isPending && error && <div className='text-red-500 mt-2'>{error}</div> }
+
+          { error && <div className='text-red-500 mt-2'>{error}</div> }
+
+          <Peiding>
+            <Spinner className='mx-auto' />
+          </Peiding>
         </form>
       </div>
       <Stocks productId={PRODUCT_ID} />
     </div>
   );
+}
+
+const Peiding: FC<{children: React.ReactNode}> = ({ children }) => {
+  const { pending } = useFormStatus()
+
+  return pending && children
 }
 
 export default App;
